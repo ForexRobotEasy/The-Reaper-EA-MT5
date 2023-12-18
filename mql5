@@ -1,0 +1,107 @@
+mql5
+// The Reaper EA MT5
+// Developer's site: forexroboteasy.com
+// Development: Forex Robot Easy Team
+
+// News Filter feature
+bool IsHighImpactNewsEvent()
+{
+    // Check if there is a high-impact news event
+    if (NewsEvent.impact == HIGH)
+    {
+        return true;
+    }
+    return false;
+}
+
+// Individual performance monitor
+void TrackPerformance(string currencyPair)
+{
+    double currentProfit = CalculateCurrentProfit(currencyPair);
+
+    // Check if the currency pair's performance is not well
+    if (currentProfit < 0)
+    {
+        ReduceRisk(currencyPair);
+    }
+    // Check if the currency pair's performance is profitable again
+    else if (currentProfit > 0)
+    {
+        ResetRisk(currencyPair);
+    }
+}
+
+// Correlation filter
+bool IsExcessiveExposure(string currencyPair)
+{
+    double exposure = CalculateExposure(currencyPair);
+
+    // Check if the exposure to the currency pair is excessive
+    if (exposure > MAX_EXPOSURE)
+    {
+        return true;
+    }
+    return false;
+}
+
+// Night scalping algorithm
+void NightScalpingAlgorithm()
+{
+    // Identify currency pairs for night scalping
+    string[] currencyPairs = GetCurrencyPairsForNightScalping();
+
+    foreach (string currencyPair in currencyPairs)
+    {
+        // Identify nightly ranges for the currency pair
+        double[] nightlyRanges = GetNightlyRanges(currencyPair);
+
+        foreach (double nightlyRange in nightlyRanges)
+        {
+            // Check for reversal and execute profitable trades
+            if (IsReversal(nightlyRange))
+            {
+                ExecuteTrade(currencyPair);
+            }
+        }
+    }
+}
+
+// Sophisticated filters and safety measures
+void ApplyFiltersAndSafetyMeasures()
+{
+    ApplyFilter1();
+    ApplyFilter2();
+    ApplyFilter3();
+    ApplySafetyMeasure1();
+    ApplySafetyMeasure2();
+}
+
+// Main function
+void OnTick()
+{
+    // Check if it's during high-impact news event
+    if (IsHighImpactNewsEvent())
+    {
+        return; // Skip trading during volatile market conditions
+    }
+
+    // Track performance of each currency pair
+    string[] allCurrencyPairs = GetAllCurrencyPairs();
+
+    foreach (string currencyPair in allCurrencyPairs)
+    {
+        TrackPerformance(currencyPair);
+
+        // Check for excessive exposure to the same currencies
+        if (IsExcessiveExposure(currencyPair))
+        {
+            return; // Skip trading to reduce potential risks
+        }
+    }
+
+    // Execute night scalping algorithm
+    NightScalpingAlgorithm();
+
+    // Apply sophisticated filters and safety measures
+    ApplyFiltersAndSafetyMeasures();
+}
